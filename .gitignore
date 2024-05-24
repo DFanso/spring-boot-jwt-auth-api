@@ -22,3 +22,31 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+.DS_Store
+.env
+
+
+# Ignore environment configuration files
+
+
+# Ignore database files
+*.db
+
+# Ignore logs
+logs/
+
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore Eclipse project files
+.project
+.classpath
+.settings/
+
+# Ignore Maven target directory
+target/
+
+# Ignore build output directories
+bin/
+build/
+.idea/discord.xml
