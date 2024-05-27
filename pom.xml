@@ -104,6 +104,15 @@
 			<artifactId>springdoc-openapi-common</artifactId>
 			<version>1.6.15</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+
+
+
+
 	</dependencies>
 
 	<build>
@@ -113,6 +122,9 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+
+
+
 	</build>
 
 </project>
