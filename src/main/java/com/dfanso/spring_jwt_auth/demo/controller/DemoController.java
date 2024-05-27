@@ -1,7 +1,7 @@
-package com.dfanso.spring_jwt_auth.controller;
+package com.dfanso.spring_jwt_auth.demo.controller;
 
-import com.dfanso.spring_jwt_auth.dto.DemoDto;
-import com.dfanso.spring_jwt_auth.service.DemoService;
+import com.dfanso.spring_jwt_auth.demo.service.DemoService;
+import com.dfanso.spring_jwt_auth.demo.dto.DemoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

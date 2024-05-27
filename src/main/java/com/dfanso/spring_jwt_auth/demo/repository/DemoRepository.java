@@ -1,8 +1,8 @@
-package com.dfanso.spring_jwt_auth.repository;
+package com.dfanso.spring_jwt_auth.demo.repository;
 
 
 
-import com.dfanso.spring_jwt_auth.model.Demo;
+import com.dfanso.spring_jwt_auth.demo.model.Demo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

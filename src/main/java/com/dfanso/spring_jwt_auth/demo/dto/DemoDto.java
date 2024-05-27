@@ -1,4 +1,4 @@
-package com.dfanso.spring_jwt_auth.dto;
+package com.dfanso.spring_jwt_auth.demo.dto;
 
 
 public class DemoDto {

@@ -1,4 +1,4 @@
-package com.dfanso.spring_jwt_auth.model;
+package com.dfanso.spring_jwt_auth.demo.model;
 
 
 import jakarta.persistence.*;

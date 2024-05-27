@@ -1,10 +1,10 @@
-package com.dfanso.spring_jwt_auth.service;
+package com.dfanso.spring_jwt_auth.demo.service;
 
 
-import com.dfanso.spring_jwt_auth.dto.DemoDto;
-import com.dfanso.spring_jwt_auth.exception.ResourceNotFoundException;
-import com.dfanso.spring_jwt_auth.model.Demo;
-import com.dfanso.spring_jwt_auth.repository.DemoRepository;
+import com.dfanso.spring_jwt_auth.demo.repository.DemoRepository;
+import com.dfanso.spring_jwt_auth.demo.dto.DemoDto;
+import com.dfanso.spring_jwt_auth.demo.exception.ResourceNotFoundException;
+import com.dfanso.spring_jwt_auth.demo.model.Demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

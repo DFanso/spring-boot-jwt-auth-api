@@ -1,4 +1,4 @@
-package com.dfanso.spring_jwt_auth.exception;
+package com.dfanso.spring_jwt_auth.demo.exception;
 
 
 import org.springframework.http.HttpStatus;
