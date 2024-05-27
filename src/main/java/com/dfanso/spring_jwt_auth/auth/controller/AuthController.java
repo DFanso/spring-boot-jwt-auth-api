@@ -1,7 +1,10 @@
 package com.dfanso.spring_jwt_auth.auth.controller;
 
 
-import com.dfanso.spring_jwt_auth.auth.dto.UserDto;
+import com.dfanso.spring_jwt_auth.auth.dto.*;
+import com.dfanso.spring_jwt_auth.auth.exception.EmailAlreadyTakenException;
+import com.dfanso.spring_jwt_auth.auth.exception.InvalidCredentialsException;
+import com.dfanso.spring_jwt_auth.auth.exception.ResourceNotFoundException;
 import com.dfanso.spring_jwt_auth.auth.model.User;
 import com.dfanso.spring_jwt_auth.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +27,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
-        UserDto registeredUser = userService.registerUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
+        try {
+            UserRegistrationResponseDto registeredUser = userService.registerUser(userDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        } catch (EmailAlreadyTakenException e) {
+            ErrorResponseDto errorResponse = new ErrorResponseDto(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserDto userDto) {
-        boolean isAuthenticated = userService.authenticateUser(userDto.getEmail(), userDto.getPassword());
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto) {
+        try {
+            userService.authenticateUser(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+            return ResponseEntity.ok(new LoginResponseDto("Login successful"));
+        } catch (InvalidCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponseDto("Invalid credentials"));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LoginResponseDto(e.getMessage()));
         }
     }
 }
