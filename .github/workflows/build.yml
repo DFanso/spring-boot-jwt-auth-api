@@ -26,7 +26,9 @@ jobs:
         run: mvn clean install
 
       - name: Build Docker image
-        run: docker build -t spring-jwt-auth .
+        env:
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+        run: docker build --build-arg SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} -t spring-jwt-auth .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2

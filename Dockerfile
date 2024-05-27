@@ -4,6 +4,12 @@ FROM openjdk:21-jdk
 # Set the working directory inside the container
 WORKDIR /app
 
+# Accept an argument for the datasource URL
+ARG SPRING_DATASOURCE_URL
+
+# Set the environment variable
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+
 # Copy the project's jar file into the container at /app
 COPY target/*.jar app.jar
 
