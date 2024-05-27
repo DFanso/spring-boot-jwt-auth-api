@@ -62,6 +62,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/api/auth/profile").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/v2/api-docs/**",
+                                "/swagger-resources/**",
+                                "/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
