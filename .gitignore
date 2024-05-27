@@ -50,3 +50,5 @@ target/
 bin/
 build/
 .idea/discord.xml
+.DS_Store
+src/main/resources/application.properties
