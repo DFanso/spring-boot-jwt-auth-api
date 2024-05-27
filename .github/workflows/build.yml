@@ -25,6 +25,10 @@ jobs:
       - name: Update application.properties
         run: |
           sed -i 's|spring.datasource.url=.*|spring.datasource.url=${{ secrets.SPRING_DATASOURCE_URL }}|' src/main/resources/application.properties
+          sed -i 's|spring.datasource.username=.*|spring.datasource.username=${{ secrets.SPRING_DATASOURCE_USERNAME }}|' src/main/resources/application.properties
+          sed -i 's|spring.datasource.password=.*|spring.datasource.password=${{ secrets.SPRING_DATASOURCE_PASSWORD }}|' src/main/resources/application.properties
+          sed -i 's|jwt.secret=.*|jwt.secret=${{ secrets.JWT_SECRET }}|' src/main/resources/application.properties
+          sed -i 's|jwt.expiration=.*|jwt.expiration=${{ secrets.JWT_EXPIRATION }}|' src/main/resources/application.properties
 
       - name: Build with Maven
         run: mvn clean install
