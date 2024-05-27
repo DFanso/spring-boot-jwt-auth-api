@@ -22,13 +22,15 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
+      - name: Update application.properties
+        run: |
+          sed -i 's|spring.datasource.url=.*|spring.datasource.url=${{ secrets.SPRING_DATASOURCE_URL }}|' src/main/resources/application.properties
+
       - name: Build with Maven
         run: mvn clean install
 
       - name: Build Docker image
-        env:
-          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
-        run: docker build --build-arg SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} -t spring-jwt-auth .
+        run: docker build -t spring-jwt-auth .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
