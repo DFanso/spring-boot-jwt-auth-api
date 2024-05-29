@@ -1,80 +1,99 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_USERNAME = credentials('docker-username')
-        DOCKER_PASSWORD = credentials('docker-password')
-        VPS_USER = credentials('vps-username')
-        VPS_HOST = credentials('vps-host')
-        VPS_SSH_KEY = credentials('vps-ssh-key')
         SPRING_DATASOURCE_URL = credentials('SPRING_DATASOURCE_URL')
         SPRING_DATASOURCE_USERNAME = credentials('SPRING_DATASOURCE_USERNAME')
         SPRING_DATASOURCE_PASSWORD = credentials('SPRING_DATASOURCE_PASSWORD')
         JWT_SECRET = credentials('JWT_SECRET')
         JWT_EXPIRATION = credentials('JWT_EXPIRATION')
+        DOCKER_USERNAME = credentials('DOCKER_USERNAME')
+        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
     }
-
+    triggers {
+        githubPush()
+    }
     stages {
-        stage('Checkout') {
+        stage('Checkout code') {
             steps {
-                git 'https://github.com/your-repo/spring-boot-jwt-auth.git'
+                git branch: 'dev', url: 'https://github.com/DFanso/spring-boot-jwt-auth-api.git'
             }
         }
-
-        stage('Build Maven Project') {
+        stage('Set up JDK 21') {
+            steps {
+                sh 'sudo apt-get update && sudo apt-get install -y openjdk-21-jdk'
+            }
+        }
+        stage('Update application.properties') {
+            steps {
+                sh '''
+                    sed -i 's|spring.datasource.url=.*|spring.datasource.url=${SPRING_DATASOURCE_URL}|' src/main/resources/application.properties
+                    sed -i 's|spring.datasource.username=.*|spring.datasource.username=${SPRING_DATASOURCE_USERNAME}|' src/main/resources/application.properties
+                    sed -i 's|spring.datasource.password=.*|spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}|' src/main/resources/application.properties
+                    sed -i 's|jwt.secret=.*|jwt.secret=${JWT_SECRET}|' src/main/resources/application.properties
+                    sed -i 's|jwt.expiration=.*|jwt.expiration=${JWT_EXPIRATION}|' src/main/resources/application.properties
+                '''
+            }
+        }
+        stage('Build with Maven') {
             steps {
                 sh 'mvn clean install'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t spring-jwt-auth .'
+            }
+        }
+        stage('Log in to Docker Hub') {
             steps {
                 script {
-                    docker.build("spring-jwt-auth:${env.BUILD_ID}").inside {
-                        sh 'mvn clean package'
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        sh 'echo "Logged in to Docker Hub"'
                     }
                 }
             }
         }
-
-        stage('Push Docker Image') {
+        stage('Push Docker image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials-id') {
-                        docker.image("spring-jwt-auth:${env.BUILD_ID}").push('latest')
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        sh '''
+                            docker tag spring-jwt-auth ${DOCKER_USERNAME}/spring-jwt-auth:latest
+                            docker push ${DOCKER_USERNAME}/spring-jwt-auth:latest
+                        '''
                     }
-                }
-            }
-        }
-
-        stage('Deploy to VPS') {
-            steps {
-                sshagent(credentials: ['vps-ssh-key']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
-                    docker pull ${DOCKER_USERNAME}/spring-jwt-auth:latest
-                    docker stop spring-jwt-auth || true
-                    docker rm spring-jwt-auth || true
-                    docker run -d --name spring-jwt-auth -p 8080:8080 \
-                    -e SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL} \
-                    -e SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} \
-                    -e SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD} \
-                    -e JWT_SECRET=${JWT_SECRET} \
-                    -e JWT_EXPIRATION=${JWT_EXPIRATION} \
-                    ${DOCKER_USERNAME}/spring-jwt-auth:latest
-                    EOF
-                    '''
                 }
             }
         }
     }
-
     post {
         success {
-            echo 'Deployment successful!'
+            script {
+                build job: 'deploy', wait: false
+            }
         }
-        failure {
-            echo 'Deployment failed.'
+    }
+}
+
+pipeline {
+    agent any
+    stages {
+        stage('Log in to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        sh 'echo "Logged in to Docker Hub"'
+                    }
+                }
+            }
+        }
+        stage('Pull and run Docker image') {
+            steps {
+                sh '''
+                    docker pull ${DOCKER_USERNAME}/spring-jwt-auth:latest
+                    docker run -d -p 3000:8080 --name spring-jwt-auth-container ${DOCKER_USERNAME}/spring-jwt-auth:latest
+                '''
+            }
         }
     }
 }
