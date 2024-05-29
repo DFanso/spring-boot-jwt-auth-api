@@ -78,9 +78,9 @@ This project is a Spring Boot application with JWT authentication. It provides a
 
 ## API Endpoints
 
-- `POST /api/auth/register` - Register a new user.
-- `POST /api/auth/login` - Authenticate a user and get a token.
-- `GET /api/auth/profile` - Get user's profile.
+- `POST /api/v1/auth/register` - Register a new user.
+- `POST /api/v1/auth/login` - Authenticate a user and get a token.
+- `GET /api/v1/auth/profile` - Get user's profile.
 
 ## Contributing
 
