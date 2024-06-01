@@ -25,6 +25,7 @@ This project is a Spring Boot application with JWT authentication. It provides a
 - **JWT** - for secure authentication and authorization.
 - **Spring Security** - to secure the application.
 - **Maven** - for dependency management.
+- **Swagger** - for API Documentation.
 - **H2 Database** - in-memory database for development and testing.
 - **Postgres Database** - Sequel database for persistence data.
 
@@ -35,11 +36,10 @@ This project is a Spring Boot application with JWT authentication. It provides a
 ![JWT](https://img.shields.io/badge/-JWT-000000?style=for-the-badge&logo=json-web-tokens)
 ![Maven](https://img.shields.io/badge/-Maven-C71A36?style=for-the-badge&logo=apache-maven)
 ![H2 Database](https://img.shields.io/badge/-H2-4479A1?style=for-the-badge&logo=h2)
-![H2 Database](https://img.shields.io/badge/postgresql-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgresql-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Swagger](https://img.shields.io/badge/swagger-6DB33F?style=for-the-badge&logo=swagger)
 ![Jenkins](https://img.shields.io/badge/-Jenkins-000?style=for-the-badge&logo=jenkins)
-&nbsp;
 ![Docker](https://img.shields.io/badge/-Docker-2496ED?style=for-the-badge&logo=docker)
-&nbsp;
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?style=for-the-badge&logo=github)
 
 
@@ -74,7 +74,7 @@ This project is a Spring Boot application with JWT authentication. It provides a
 ### Usage
 
 - Access the application at `http://localhost:8080`.
-- Use tools like Postman or curl to test the API endpoints.
+- Access Swagger Api Doc at `http://localhost:8080/swagger-ui/index.html`
 
 ## API Endpoints
 
